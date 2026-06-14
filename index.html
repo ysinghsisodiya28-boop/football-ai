@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Football AI Shorts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family: Arial; text-align:center; padding:20px; background:#111; color:white;">
+
+<h1>⚽ Football AI Shorts</h1>
+
+<p>Upload football video → get AI highlights</p>
+
+<br>
+
+<input type="file" id="file"><br><br>
+
+<button onclick="generate()" style="padding:10px 20px; background:red; color:white; border:none;">
+🚀 Generate Shorts
+</button>
+
+<br><br>
+
+<div id="output"></div>
+
+<script>
+async function generate() {
+  const file = document.getElementById("file").files[0];
+
+  if (!file) {
+    alert("Please upload a video first");
+    return;
+  }
+
+  document.getElementById("output").innerHTML = "⏳ Processing...";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // 🔴 REPLACE THIS WITH YOUR RENDER BACKEND LINK
+  const backendURL = "https://https://football-ai-1-x5y1.onrender.com/generate";
+
+  try {
+    const res = await fetch(backendURL, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    let html = "<h3>🎬 AI Results</h3>";
+
+    data.clips.forEach(clip => {
+      html += `
+        <video width="300" controls>
+          <source src="${clip.clip}">
+        </video>
+        <p>${clip.style}</p>
+        <br>
+      `;
+    });
+
+    document.getElementById("output").innerHTML = html;
+
+  } catch (err) {
+    document.getElementById("output").innerHTML =
+      "❌ Error connecting to backend";
+  }
+}
+</script>
+
+</body>
+</html>
