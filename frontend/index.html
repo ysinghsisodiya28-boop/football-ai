@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Football AI Shorts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family: Arial; text-align:center; padding:20px;">
+
+<h1>⚽ Football AI Shorts</h1>
+
+<p>Upload video → get AI highlights</p>
+
+<input type="file" id="file"><br><br>
+
+<button onclick="generate()">Generate</button>
+
+<div id="output" style="margin-top:20px;"></div>
+
+<script>
+async function generate() {
+  const file = document.getElementById("file").files[0];
+
+  if (!file) {
+    alert("Upload a video first");
+    return;
+  }
+
+  document.getElementById("output").innerHTML = "⏳ Processing...";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("https://YOUR-BACKEND.onrender.com/generate", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  let html = "<h3>🎬 AI Output</h3>";
+
+  data.clips.forEach(c => {
+    html += `
+      <video width="300" controls>
+        <source src="${c.clip}">
+      </video>
+      <p>${c.style}</p>
+      <br>
+    `;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
